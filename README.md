@@ -4,16 +4,18 @@
 
 raspberry pi project to control hue and chromecast quickly and who knows what else from the comfort of my bed
 
-this is a pet project and probably not of use to anyone but happy to help anyone looking for some things
+this is a pet project and probably not of use to anyone but happy to help anyone looking for some help
 
 
 
-Current Features
+##Current Features
  * On/Off Hue Lights via GPIO button
  * Play/Pause Chromecast
  * Dimmer control via potentiometer and MCP3008
  
- Things I'd like to add
+##Wish List
  * IR remote Support
  * Display Support
  * Random use of my other sensors
+
+Schematic/Enclosure Coming Soon™
