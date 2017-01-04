@@ -1,0 +1,22 @@
+Cython>=0.21.1
+Flask==0.10.1
+Jinja2==2.7.3
+MarkupSafe==0.23
+Pillow==2.6.1
+Werkzeug==0.9.6
+
+#hue
+phue >= 0.9
+#chromecast
+requests>=2.0
+protobuf==3.0.0b2
+zeroconf>=0.17.4
+six>=1.10.0
+PyChromecast>=0.7.7
+
+#pi specific libs
+RPi.GPIO==0.6.2
+RTIMULib==7.2.1
+mcpi==0.1.1
+pifacedigitalio==3.1.0
+pigpio==1.30
