@@ -5,6 +5,7 @@ from threading import Thread
 
 from gpiozero import DigitalInputDevice
 
+
 class Command(IntEnum):
     Power = 209
     Mode = 177
@@ -27,6 +28,7 @@ class Command(IntEnum):
     Seven = 161
     Eight = 165
     Nine = 169
+
 
 class PulseType(Enum):
     Start = (9, 4.5)
@@ -76,6 +78,7 @@ class IrRemote:
             current_time = time.time()
             self.last_time = current_time
             state = self.input.value
+
             def pulse_start():
                 self.start_pulse_time = current_time
                 # check if we had a preceding pulse
@@ -123,7 +126,10 @@ class IrRemote:
                     self.pulses = []
                     return
 
-                self.when_pressed(command)
+                # split into a separate thread to make sure we can continue reading quickly!
+                thread = Thread(target=lambda: self.when_pressed(command))
+                thread.start()
+
                 print(command, code)
                 if len(self.pulses) < 32:
                     print("partial ir heard, ignoring")
