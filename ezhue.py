@@ -1,7 +1,14 @@
+from enum import Enum
 from math import floor
 from random import randrange
 
 from phue import Bridge
+
+
+class HueColors(Enum):
+    Blue = {'hue': 46920, 'sat': 255, 'transitiontime': 5, 'effect': 'none'}
+    White = {'hue': 46920, 'sat': 0, 'transitiontime': 5, 'effect': 'none'}
+    Red = {'hue': 26920, 'sat': 255, 'transitiontime': 5, 'effect': 'none'}
 
 
 class EZHue:
@@ -20,12 +27,10 @@ class EZHue:
 
     @brightness.setter
     def brightness(self, value):
-        self._brightness = min(1,max(value, 0))
+        self._brightness = min(1, max(value, 0))
         print("brightness", self._brightness)
         brightness = {'bri': floor(self._brightness * 255), 'transitiontime': 3}
-        self.bridge.set_light(1, brightness)
-        self.bridge.set_light(2, brightness)
-        self.bridge.set_light(3, brightness)
+        self.bridge.set_light([1, 2, 3], brightness)
         return self._brightness
 
     def toggle(self, on=None):
@@ -42,13 +47,19 @@ class EZHue:
         bridge.connect()
         return bridge
 
-
     def rando_color(self):
-        return {'hue': randrange(0, 65535), 'sat': randrange(0, 75),
-                'transitiontime': 10}
+        return {'hue': randrange(0, 65535), 'sat': randrange(200, 255),
+                'transitiontime': 10, 'effect': 'none'}
+
+    def disco_santaclause(self):
+        return self.bridge.set_light([1, 2, 3], {'effect': 'colorloop'})
 
     def make_lights_rando(self):
         print("random lights timetime")
         self.bridge.set_light(1, self.rando_color())
         self.bridge.set_light(2, self.rando_color())
         self.bridge.set_light(3, self.rando_color())
+
+    def set_color(self, color):
+        print(color)
+        self.bridge.set_light([1, 2, 3], color.value)

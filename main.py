@@ -7,7 +7,7 @@ import RPi.GPIO as GPIO
 from gpiozero import MCP3008
 from buttons import Buttons
 from chromecast import EZChromeCast
-from ezhue import EZHue
+from ezhue import EZHue, HueColors
 from irremote import IrRemote, Command
 
 import pydevd
@@ -52,6 +52,10 @@ class DreamMachine:
             self.hue.brightness += .1
         elif command is Command.Down:
             self.hue.brightness -= .1
+        elif command is Command.One:
+            self.hue.set_color(HueColors.Blue)
+        elif command is Command.Weird_Button:
+            self.hue.disco_santaclause()
         else:
             self.hue.make_lights_rando()
 

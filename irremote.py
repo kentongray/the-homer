@@ -5,6 +5,8 @@ from threading import Thread
 
 from gpiozero import DigitalInputDevice
 
+from util import list_right_index
+
 
 class Command(IntEnum):
     Power = 209
@@ -111,31 +113,31 @@ class IrRemote:
                     else:
                         return "0"
 
+                if len(self.pulses) < 32:
+                    print("partial ir heard, ignoring")
+                    self.pulses = []
+
                 # trim off anything before the start pulse
                 try:
-                    i = self.pulses.index(PulseType.Start)
+                    i = list_right_index(self.pulses, PulseType.Start)
                 except:
+                    self.pulses = []
                     return
+
                 self.pulses = self.pulses[i:]
                 bits = ''.join(list(map(type_to_str, self.pulses[16:][:8])))
                 code = int(bits, 2)
                 try:
                     command = Command(code)
+
                 except:
                     print("Invalid command code, ignoring", code)
-                    self.pulses = []
                     return
-
+                finally:
+                    self.pulses = []
                 # split into a separate thread to make sure we can continue reading quickly!
                 thread = Thread(target=lambda: self.when_pressed(command))
                 thread.start()
-
-                print(command, code)
-                if len(self.pulses) < 32:
-                    print("partial ir heard, ignoring")
-                    self.pulses = []
-
-                self.pulses = []
 
             if state is False and self.last_pulse_end is not None and (current_time - self.last_pulse_end) > .3:
                 end_of_pulses()
