@@ -21,3 +21,5 @@ this is a pet project and probably not of use to anyone but happy to help anyone
  * Convert to rust?!
  
 Schematic in the fritzing folder
+<img width="647" alt="board" src="https://cloud.githubusercontent.com/assets/100857/21959727/3f92c2bc-da96-11e6-9e0b-b19ca22ed45d.png">
+![schematic](https://cloud.githubusercontent.com/assets/100857/21959730/59413022-da96-11e6-9783-85f8000bdc65.png)
