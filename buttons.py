@@ -3,6 +3,8 @@ from threading import Thread
 
 import RPi.GPIO as GPIO
 
+from util import thread_it
+
 
 class Button:
     down = False
@@ -36,6 +38,5 @@ class Buttons:
             time.sleep(.1)
 
 
-thread = Thread(target=Buttons.check_buttons)
-thread.start()
+thread_it(lambda: Buttons.check_buttons)
 print("IO thread inited")

@@ -1,15 +1,16 @@
 import time
 from math import fabs
-from threading import Thread
 
 import RPi.GPIO as GPIO
 from gpiozero import MCP3008
+
+from nester import Nester
 from buttons import Buttons
 from chromecast import EZChromeCast
 from ezhue import EZHue, HueColors
 from irremote import IrRemote, Command
+from util import thread_it
 
-import pydevd
 
 class DreamMachine:
     LIGHT_BUTTON_PIN = 21
@@ -19,16 +20,15 @@ class DreamMachine:
     GPIO.setup(LIGHT_BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(CHROMECAST_BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-    def __init__(self):
+    def __init__(self, cfg=None):
+        self.nest = Nester(cfg)
         print("Starting the DreamMachine, rest easy")
         self.hue = EZHue()
-
 
         self.pot = MCP3008(channel=0)
         self.pot_value = -1
         print("Let's watch the pot switch")
-        thread = Thread(target=lambda: self.watch_pot())
-        thread.start()
+        thread_it(lambda: self.watch_pot())
         print("Now how about a little infared")
         self.remote = IrRemote(when_pressed=self.when_ir_pressed)
         print("Chromecast be patient")
@@ -42,7 +42,7 @@ class DreamMachine:
         print("ir heard", command)
         if command is Command.Power:
             self.hue.toggle()
-        elif  command is Command.Play:
+        elif command is Command.Play:
             self.chrome_cast.toggle()
         elif command is Command.Up:
             self.hue.brightness += .1
@@ -51,7 +51,7 @@ class DreamMachine:
         elif command is Command.One:
             self.hue.set_color(HueColors.Blue)
         elif command is Command.Weird_Button:
-            self.hue.disco_santaclause()
+            self.hue.disco_santa_clause()
         else:
             self.hue.make_lights_rando()
 
@@ -66,8 +66,6 @@ class DreamMachine:
 
     def toggle_lights(self, on=None):
         self.hue.toggle(on)
-        print("toggle lights", on)
-
 
     def toggle_chromecast(self, on=None):
         self.chrome_cast.toggle(on)
@@ -75,4 +73,3 @@ class DreamMachine:
     @staticmethod
     def snooze():
         pass
-

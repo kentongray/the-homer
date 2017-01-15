@@ -12,6 +12,7 @@ protobuf==3.0.0b2
 zeroconf>=0.17.4
 six>=1.10.0
 PyChromecast>=0.7.7
+python-nest==2.11
 
 #pi specific libs
 RPi.GPIO==0.6.2

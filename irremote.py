@@ -1,11 +1,10 @@
 import time
 from enum import Enum, IntEnum
 from math import fabs
-from threading import Thread
 
 from gpiozero import DigitalInputDevice
 
-from util import list_right_index
+from util import list_right_index, thread_it
 
 
 class Command(IntEnum):
@@ -67,9 +66,7 @@ class IrRemote:
         self.last_time = time.time()
         self.start_pulse_time = None
         self.in_pulse = False
-        thread = Thread(target=lambda: self.watch_ir())
-        thread.start()
-        # self.pulses = array()_
+        thread_it(lambda: self.watch_ir())
 
     # basically a state machine to watch the pulses
     def watch_ir(self):
@@ -84,9 +81,9 @@ class IrRemote:
             def pulse_start():
                 self.start_pulse_time = current_time
                 # check if we had a preceding pulse
-                if self.last_pulse_end is not None:
-                    create_pulse()
-                    self.last_pulse_duration = None
+                # if self.last_pulse_end is not None:
+                #    create_pulse()
+                #    self.last_pulse_duration = None
 
             def create_pulse():
                 # uncomment for raw ir feed
@@ -113,31 +110,35 @@ class IrRemote:
                     else:
                         return "0"
 
-                if len(self.pulses) < 32:
-                    print("partial ir heard, ignoring, pulses:", len(self.pulses))
-                    self.pulses = []
-
-                # trim off anything before the start pulse
                 try:
-                    i = list_right_index(self.pulses, PulseType.Start)
-                except:
-                    self.pulses = []
-                    return
+                    self.pulses = list(filter(lambda i: i is not PulseType.Mystery, self.pulses))
+                    if len(self.pulses) <= 0:
+                        # it was all junk
+                        return
+                    elif len(self.pulses) < 32:
+                        print("partial ir heard, ignoring, pulses:", self.pulses)
+                        return
 
-                self.pulses = self.pulses[i:]
-                bits = ''.join(list(map(type_to_str, self.pulses[16:][:8])))
-                code = int(bits, 2)
-                try:
-                    command = Command(code)
+                    # trim off anything before the start pulse
+                    try:
+                        i = list_right_index(self.pulses, PulseType.Start)
+                    except:
+                        return
 
+                    self.pulses = self.pulses[i:]
+                    bits = ''.join(list(map(type_to_str, self.pulses[16:][:8])))
+                    code = int(bits, 2)
+                    try:
+                        command = Command(code)
+                    except:
+                        print("Invalid command code, ignoring", code)
+                        return
+                    # split into a separate thread to make sure we can continue reading quickly!
+                    thread_it(lambda: self.when_pressed(command))
                 except:
-                    print("Invalid command code, ignoring", code)
-                    return
+                    print("In IR land something strange happened (prob ufos)", self.pulses)
                 finally:
                     self.pulses = []
-                # split into a separate thread to make sure we can continue reading quickly!
-                thread = Thread(target=lambda: self.when_pressed(command))
-                thread.start()
 
             if state is False and self.last_pulse_end is not None and (current_time - self.last_pulse_end) > .3:
                 end_of_pulses()
