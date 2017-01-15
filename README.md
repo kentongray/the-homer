@@ -1,8 +1,7 @@
-# dream-machine
-![dream machine](https://img1.etsystatic.com/119/0/10528271/il_340x270.1060758357_5wct.jpg)
+#The Homer
+[![The Homer for a modern age](https://img.youtube.com/vi/Pw9gaEiQAxY/0.jpg)](https://www.youtube.com/watch?v=Pw9gaEiQAxY)
 
-
-raspberry pi project to control my house (nest, hue and chromecast) quickly and who knows what else from the comfort of my bed with 
+Python3/Raspberry Pi project to control my house (nest, hue and chromecast) quickly from the comfort of my bed.
 
 this is a pet project and probably not of use to anyone but happy to help anyone looking for some help
 
