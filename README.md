@@ -12,11 +12,12 @@ this is a pet project and probably not of use to anyone but happy to help anyone
  * On/Off Hue Lights via GPIO button
  * Play/Pause Chromecast
  * Dimmer control via potentiometer and MCP3008
+ * IR remote Support 
  
 ##Wish List
- * IR remote Support
+ * Web Server?
  * Display Support
  * Random use of my other sensors
  * Convert to rust?!
  
-Schematic/Enclosure Coming Soon™
+Schematic in the fritzing folder
