@@ -114,7 +114,7 @@ class IrRemote:
                         return "0"
 
                 if len(self.pulses) < 32:
-                    print("partial ir heard, ignoring")
+                    print("partial ir heard, ignoring, pulses:", len(self.pulses))
                     self.pulses = []
 
                 # trim off anything before the start pulse

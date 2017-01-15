@@ -1,10 +1,9 @@
 Cython>=0.21.1
-Flask==0.10.1
 Jinja2==2.7.3
 MarkupSafe==0.23
 Pillow==2.6.1
 Werkzeug==0.9.6
-
+Flask==0.12
 #hue
 phue >= 0.9
 #chromecast

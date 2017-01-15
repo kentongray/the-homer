@@ -55,7 +55,7 @@ class EZHue:
         return self.bridge.set_light([1, 2, 3], {'effect': 'colorloop'})
 
     def make_lights_rando(self):
-        print("random lights timetime")
+        print("random lights time")
         self.bridge.set_light(1, self.rando_color())
         self.bridge.set_light(2, self.rando_color())
         self.bridge.set_light(3, self.rando_color())
