@@ -134,7 +134,8 @@ def index():
                ("fan-on", "I CAN'T BREATH!"),
                ]
     buttons = ''.join(
-        map(lambda i: "<a href=\"" + i[0] + "\" class=\"" + i[0] + " u-full-width button\">" + i[1] + "</a>",
+        map(lambda i: "<button onclick=\"post('" + i[0] + "')\" class=\"" + i[0] + " u-full-width button\">" + i[
+            1] + "</button>",
             options))
     random_text = ["All🔘Your🔘Button🔘Pressing🔘Needs",
                    "DREAM MACHINE ❤️s YOU",
@@ -149,6 +150,14 @@ def index():
     <meta name=apple-mobile-web-app-status-bar-style content=white>
     <title>DreamMachine</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.2/fetch.min.js"></script>
+    <script>
+        function post(url) {
+            fetch(url, {
+              method: 'POST',
+            }).then(r => console.log('done', url));
+        }
+    </script>
     <h1 style=\"text-transform:lowercase\">DreamMachine</h2>
     %s
     <div class="random">%s</div>
@@ -172,43 +181,45 @@ def ensure_on(func):
     return callback
 
 
-@app.route("/toggle-hue")
+@app.route("/toggle-hue", methods=['POST'])
 def toggle_lights():
     return redirect_async(lambda: dream_machine.toggle_lights())
 
 
-@app.route("/disco-santa-clause")
+@app.route("/disco-santa-clause", methods=['POST'])
 def disco():
     return redirect_async(ensure_on(lambda: dream_machine.hue.disco_santa_clause()))
 
 
-@app.route("/blue")
+@app.route("/blue", methods=['POST'])
 def blue():
     return redirect_async(ensure_on(lambda: dream_machine.hue.set_color(HueColors.Blue)))
 
 
-@app.route("/chrome-cast")
+@app.route("/chrome-cast", methods=['POST'])
 def toggle_chromecast():
     return redirect_async(lambda: dream_machine.toggle_chromecast())
 
 
-@app.route("/random-color")
+@app.route("/random-color", methods=['POST'])
 def random_color():
     return redirect_async(ensure_on(lambda: dream_machine.hue.make_lights_rando()))
 
 
-@app.route("/fan-on")
+@app.route("/fan-on", methods=['POST'])
 def fan_on():
-    return redirect_async(ensure_on(lambda: dream_machine.nest.fan_on()))
+    return redirect_async(lambda: dream_machine.nest.fan_on())
 
 
-@app.route("/colder")
+@app.route("/colder", methods=['POST'])
 def colder():
-    return redirect_async(ensure_on(lambda: dream_machine.nest.colder()))
+    return redirect_async(lambda: dream_machine.nest.colder())
 
-@app.route("/hotter")
+
+@app.route("/hotter", methods=['POST'])
 def hotter():
-    return redirect_async(ensure_on(lambda: dream_machine.nest.hotter()))
+    return redirect_async(lambda: dream_machine.nest.hotter())
+
 
 def run(dm):
     global dream_machine
