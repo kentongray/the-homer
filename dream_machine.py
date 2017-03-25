@@ -35,13 +35,18 @@ class DreamMachine:
         self.chrome_cast = EZChromeCast("HomeCast")
         print("GPIO Time")
         self.light_button = Button(self.LIGHT_BUTTON_PIN, pull_up=False)
-        self.light_button.when_pressed = self.toggle_lights
         self.chromecast_button = Button(self.CHROMECAST_BUTTON_PIN, pull_up=False)
-        self.chromecast_button.when_pressed = self.toggle_chromecast
         self.sleep_button = Button(self.RANDO_PIN, pull_up=False)
-        self.sleep_button.when_pressed = self.rando
+
+        self.light_button.when_pressed = self.toggle_lights
+        self.chromecast_button.when_pressed = self.toggle_chromecast
+        self.sleep_button.when_pressed = self.take_me_to_the_zen_garden
 
         print("Alright dream cowboy, I'm ready for your button pressing")
+
+    def take_me_to_the_zen_garden(self):
+        print("the door is very old")
+        self.chrome_cast.play("http://172.16.0.20/static/zengarden.mp3")
 
     def when_ir_pressed(self, command):
         print("ir heard", command)

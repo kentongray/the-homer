@@ -22,16 +22,21 @@ class EZChromeCast():
 
     def play(self, url=None):
         if self.ready is False:
+            print("chromecast isn't ready yet")
             return
         self.playing = True
         if url is None:
             url = self.url
+        print("playing", url)
         self.cast.media_controller.play_media(url, self.content_type)
+        print(self.cast.status)
+        print(self.cast.media_controller.status)
+
 
     def toggle(self, on=None):
         if on is None:
             on = not self.playing
-        print("chromecast coming ", on)
+
         if on:
             self.play()
         else:

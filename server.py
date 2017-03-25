@@ -2,12 +2,13 @@ import random
 
 from flask import Flask
 from flask import redirect
+from flask import send_from_directory
 from flask import url_for
 
 from ezhue import HueColors
 from util import thread_it
 
-app = Flask("dreammachine")
+app = Flask("dreammachine", static_url_path='/static')
 dream_machine = None
 
 
@@ -40,6 +41,10 @@ style = """
     a .button {
         padding-top:20px;
         padding-bottom: 20px;
+    }
+
+    .button:active {
+        background-color: cyan;
     }
     .disco-santa-clause {
       animation: colorchange 50s; /* animation-name followed by duration in seconds*/
@@ -134,6 +139,7 @@ def index():
                ("colder", "Cool It Down"),
                ("hotter", "I'm Chilly!"),
                ("fan-on", "I CAN'T BREATHE!"),
+               ("zen-garden", "ZzzzzzzZzzZzz"),
                ]
     buttons = ''.join(
         map(lambda i: "<button onclick=\"post('" + i[0] + "')\" class=\"" + i[0] + " u-full-width button\">" + i[
@@ -160,7 +166,7 @@ def index():
         function post(url) {
             fetch(url, {
               method: 'POST',
-            }).then(r => console.log('done', url));
+            }).then(r => document.location.reload(true));
         }
     </script>
     <h1 style=\"text-transform:lowercase\">the homer</h2>
@@ -188,43 +194,52 @@ def ensure_on(func):
 
 @app.route("/toggle-hue",  methods=['POST'])
 def toggle_lights():
-    return redirect_async(lambda: dream_machine.toggle_lights())
+    dream_machine.toggle_lights()
 
 
 @app.route("/disco-santa-claus", methods=['POST'])
 def disco():
-    return redirect_async(ensure_on(lambda: dream_machine.hue.disco_santa_claus()))
+    ensure_on(lambda: dream_machine.hue.disco_santa_claus())
 
 
 @app.route("/blue", methods=['POST'])
 def blue():
-    return redirect_async(ensure_on(lambda: dream_machine.hue.set_color(HueColors.Blue)))
+    ensure_on(lambda: dream_machine.hue.set_color(HueColors.Blue))
 
 
 @app.route("/chrome-cast", methods=['POST'])
 def toggle_chromecast():
-    return redirect_async(lambda: dream_machine.toggle_chromecast())
+    dream_machine.toggle_chromecast()
 
 
 @app.route("/random-color", methods=['POST'])
 def random_color():
-    return redirect_async(ensure_on(lambda: dream_machine.hue.make_lights_rando()))
+    ensure_on(lambda: dream_machine.hue.make_lights_rando())
 
 
 @app.route("/fan-on", methods=['POST'])
 def fan_on():
-    return redirect_async(lambda: dream_machine.nest.fan_on())
+    dream_machine.nest.fan_on()
 
 
 @app.route("/colder", methods=['POST'])
 def colder():
-    return redirect_async(lambda: dream_machine.nest.colder())
+    dream_machine.nest.colder()
+    return True
 
 
 @app.route("/hotter", methods=['POST'])
 def hotter():
-    return redirect_async(lambda: dream_machine.nest.hotter())
+    dream_machine.nest.hotter()
 
+@app.route("/zen_garden", methods=['POST'])
+def zen():
+    dream_machine.take_me_to_the_zen_garden()
+
+
+@app.route('/static/<path:path>')
+def static_file(path):
+    return app.send_static_file(path)
 
 
 def run(dm):
