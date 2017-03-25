@@ -30,6 +30,7 @@ style = """
 
     h1, h2, h3, h4, .random {
         color: silver;
+        text-transform: lowercase;
     }
 
     h4 {
@@ -48,7 +49,11 @@ style = """
     .nest {
         margin: auto;
         width: auto;
-
+        border: solid 1px #ececec;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        background-color: #fafafa;
     }
 
     .clear {
@@ -64,15 +69,12 @@ style = """
     }
 
     .inside-temperature, .outside-temperature {
-        height: 50px;
         float: left;
-        font-size: 18pt;
+        font-size: 22pt;
         text-align: center;
         width: 35%;
         padding: 2%;
         margin: 5%;
-        border: solid 1px silver;
-        border-radius: 5px;
         color: gray;
     }
 
@@ -127,28 +129,31 @@ def index():
     options = [("toggle-hue", "Hue " + on_off(dream_machine.hue.on)),
                ("random-color", "I'm Feeling Random"),
                ("blue", "A Little Blue"),
-               ("disco-santa-clause", "Disco Santa Clause"),
+               ("disco-santa-claus", "Disco Santa Claus"),
                ("chrome-cast", nprMsg(dream_machine.chrome_cast.playing)),
                ("colder", "Cool It Down"),
                ("hotter", "I'm Chilly!"),
-               ("fan-on", "I CAN'T BREATH!"),
+               ("fan-on", "I CAN'T BREATHE!"),
                ]
     buttons = ''.join(
         map(lambda i: "<button onclick=\"post('" + i[0] + "')\" class=\"" + i[0] + " u-full-width button\">" + i[
             1] + "</button>",
             options))
     random_text = ["All🔘Your🔘Button🔘Pressing🔘Needs",
-                   "DREAM MACHINE ❤️s YOU",
+                   "THE HOMER ❤️'s YOU",
+                   "doh!",
+                   "hello world!",
                    "💖",
+                   "not related to the OA 👼🏻",
                    "Dream a Little Dream Of Me 😙",
-                   "🐈 🐈 🐈 🐈 🐈 🐈 🐈 🐈 🐈 🐈 🐈"]
+                   "🐈🐈🐈🐈 🐈 🐈 🐈 🐈 🐈 🐈 🐈 🐈 🐈 🐈"]
     return """
     <!DOCTYPE html>
     <meta charset=utf-8>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name=apple-mobile-web-app-capable content=yes>
     <meta name=apple-mobile-web-app-status-bar-style content=white>
-    <title>DreamMachine</title>
+    <title>the homer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.2/fetch.min.js"></script>
     <script>
@@ -158,7 +163,7 @@ def index():
             }).then(r => console.log('done', url));
         }
     </script>
-    <h1 style=\"text-transform:lowercase\">DreamMachine</h2>
+    <h1 style=\"text-transform:lowercase\">the homer</h2>
     %s
     <div class="random">%s</div>
     <div>
@@ -181,14 +186,14 @@ def ensure_on(func):
     return callback
 
 
-@app.route("/toggle-hue", methods=['POST'])
+@app.route("/toggle-hue",  methods=['POST'])
 def toggle_lights():
     return redirect_async(lambda: dream_machine.toggle_lights())
 
 
-@app.route("/disco-santa-clause", methods=['POST'])
+@app.route("/disco-santa-claus", methods=['POST'])
 def disco():
-    return redirect_async(ensure_on(lambda: dream_machine.hue.disco_santa_clause()))
+    return redirect_async(ensure_on(lambda: dream_machine.hue.disco_santa_claus()))
 
 
 @app.route("/blue", methods=['POST'])
@@ -219,6 +224,7 @@ def colder():
 @app.route("/hotter", methods=['POST'])
 def hotter():
     return redirect_async(lambda: dream_machine.nest.hotter())
+
 
 
 def run(dm):

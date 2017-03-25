@@ -1,6 +1,8 @@
 import nest
 from nest import utils as nest_utils
 
+from util import delay
+
 
 class Nester:
     def __init__(self, cfg=None):
@@ -29,9 +31,13 @@ class Nester:
         self.device.target += 1
         print("new target ", nest_utils.c_to_f(self.device.target))
 
+    def fan_off(self):
+        self.device.fan = False
+
     def fan_on(self):
         print("turn on that fan, i can't breath!")
         self.device.fan = True
+        delay(lambda: self.fan_off(), delay=600)
 
     @property
     def inside_temperature(self):
@@ -77,7 +83,7 @@ class Nester:
             print('            Fan      : %s' % device.fan)
             print('            Temp     : %0.1fC' % device.temperature)
             print('            Humidity : %0.1f%%' % device.humidity)
-            print('            Target   : %0.1fC' % device.target)
+            #print('            Target   : %0.1fC' % device.target)
             print('            Away Heat: %0.1fC' % device.away_temperature[0])
             print('            Away Cool: %0.1fC' % device.away_temperature[1])
             # print('            Eco      : %s' % device.eco)

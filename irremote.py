@@ -1,4 +1,5 @@
 import time
+import logging
 from enum import Enum, IntEnum
 from math import fabs
 
@@ -6,6 +7,7 @@ from gpiozero import DigitalInputDevice
 
 from util import list_right_index, thread_it
 
+log = logging.getLogger('ir-remote')
 
 class Command(IntEnum):
     Power = 209
@@ -75,19 +77,23 @@ class IrRemote:
             # everything inside here needs to be ridiculously fast
             # or you cause latency which messes up measurements
             current_time = time.time()
+            #print(round((self.last_time - current_time) * 1000, 2), self.input.value)
             self.last_time = current_time
+
             state = self.input.value
+
+
 
             def pulse_start():
                 self.start_pulse_time = current_time
                 # check if we had a preceding pulse
-                # if self.last_pulse_end is not None:
-                #    create_pulse()
-                #    self.last_pulse_duration = None
+                if self.last_pulse_end is not None:
+                    create_pulse()
+                    self.last_pulse_duration = None
 
             def create_pulse():
                 # uncomment for raw ir feed
-                # print(self.last_pulse_duration, (current_time - self.last_pulse_end) * 1000)
+                #print(self.last_pulse_duration, (current_time - self.last_pulse_end) * 1000)
                 pulse_type = PulseType.find_type(self.last_pulse_duration, (current_time - self.last_pulse_end) * 1000)
                 self.pulses.append(pulse_type)
 
@@ -125,6 +131,7 @@ class IrRemote:
                     except:
                         return
 
+
                     self.pulses = self.pulses[i:]
                     bits = ''.join(list(map(type_to_str, self.pulses[16:][:8])))
                     code = int(bits, 2)
@@ -142,6 +149,7 @@ class IrRemote:
 
             if state is False and self.last_pulse_end is not None and (current_time - self.last_pulse_end) > .3:
                 end_of_pulses()
+
             if state and self.start_pulse_time is None:
                 pulse_start()
             elif state is False and self.start_pulse_time is not None:

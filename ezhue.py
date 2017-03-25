@@ -39,13 +39,13 @@ class EZHue:
         print("toggle lights", on)
         self.on = on
         self.bridge.set_light([1, 2, 3], 'on', on)
-
+        #self.bridge.set_light([1, 2, 3], {'bri': 255})
 
     def create_bridge(self):
         # look up the IP address using https://www.meethue.com/api/nupnp
         bridge = Bridge()
         # If the app is not registered and the button on the hub is not pressed,
-        # press the button and cal l connect() (this only needs to be run a single time)
+        # press the button and call connect() (this only needs to be run a single time)
         bridge.connect()
         return bridge
 
@@ -53,7 +53,7 @@ class EZHue:
         return {'hue': randrange(0, 65535), 'sat': randrange(200, 255),
                 'transitiontime': 10, 'effect': 'none'}
 
-    def disco_santa_clause(self):
+    def disco_santa_claus(self):
         return self.bridge.set_light([1, 2, 3], {'effect': 'colorloop'})
 
     def make_lights_rando(self):
