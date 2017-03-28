@@ -14,24 +14,25 @@ class EZChromeCast():
         self.playing = False
         self.ready = False
 
+    @property
+    def playing(self):
+        return self.ready and not self.cast.is_idle
+
     def create_chrome_cast(self, name):
         self.cast = pychromecast.get_chromecast(friendly_name=name)
         self.cast.wait()
-        self.playing = not self.cast.is_idle
         self.ready = True
 
     def play(self, url=None):
         if self.ready is False:
             print("chromecast isn't ready yet")
             return
-        self.playing = True
         if url is None:
             url = self.url
         print("playing", url)
         self.cast.media_controller.play_media(url, self.content_type)
         print(self.cast.status)
         print(self.cast.media_controller.status)
-
 
     def toggle(self, on=None):
         if on is None:
@@ -45,6 +46,5 @@ class EZChromeCast():
     def stop(self):
         if self.ready is False:
             return
-        self.playing = False
         mc = self.cast.media_controller
         mc.stop()
