@@ -1,3 +1,4 @@
+import os
 import random
 
 from flask import Flask
@@ -8,7 +9,9 @@ from flask import url_for
 from ezhue import HueColors
 from util import thread_it
 
-app = Flask("dreammachine", static_url_path='/static')
+static_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static')
+print(static_folder, os.getcwd(), os.path.dirname(os.path.realpath(__file__)))
+app = Flask("dreammachine", static_folder=static_folder)
 dream_machine = None
 
 
@@ -195,51 +198,54 @@ def ensure_on(func):
 @app.route("/toggle-hue",  methods=['POST'])
 def toggle_lights():
     dream_machine.toggle_lights()
+    return "", 204
 
 
 @app.route("/disco-santa-claus", methods=['POST'])
 def disco():
     ensure_on(lambda: dream_machine.hue.disco_santa_claus())
+    return "", 204
 
 
 @app.route("/blue", methods=['POST'])
 def blue():
     ensure_on(lambda: dream_machine.hue.set_color(HueColors.Blue))
+    return "", 204
 
 
 @app.route("/chrome-cast", methods=['POST'])
 def toggle_chromecast():
     dream_machine.toggle_chromecast()
-
+    return "", 204
 
 @app.route("/random-color", methods=['POST'])
 def random_color():
     ensure_on(lambda: dream_machine.hue.make_lights_rando())
+    return True
 
 
 @app.route("/fan-on", methods=['POST'])
 def fan_on():
     dream_machine.nest.fan_on()
+    return True
 
 
 @app.route("/colder", methods=['POST'])
 def colder():
     dream_machine.nest.colder()
-    return True
+    return "", 204
 
 
 @app.route("/hotter", methods=['POST'])
 def hotter():
     dream_machine.nest.hotter()
+    return "", 204
 
-@app.route("/zen_garden", methods=['POST'])
+
+@app.route("/zen-garden", methods=['POST'])
 def zen():
     dream_machine.take_me_to_the_zen_garden()
-
-
-@app.route('/static/<path:path>')
-def static_file(path):
-    return app.send_static_file(path)
+    return "", 204
 
 
 def run(dm):

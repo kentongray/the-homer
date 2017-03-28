@@ -46,7 +46,7 @@ class DreamMachine:
 
     def take_me_to_the_zen_garden(self):
         print("the door is very old")
-        self.chrome_cast.play("http://172.16.0.20/static/zengarden.mp3")
+        self.chrome_cast.play("http://172.16.0.20/static/mp3/zengarden.mp3")
 
     def when_ir_pressed(self, command):
         print("ir heard", command)
