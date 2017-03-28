@@ -11,7 +11,6 @@ class EZChromeCast():
         self.url = url
         self.cast = None
         thread_it(lambda: self.create_chrome_cast(name))
-        self.playing = False
         self.ready = False
 
     @property
