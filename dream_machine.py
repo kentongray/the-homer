@@ -1,3 +1,4 @@
+import random
 import time
 from math import fabs
 
@@ -29,9 +30,8 @@ class DreamMachine:
         self.pot_value = -1
         print("Let's watch the pot switch")
         thread_it(lambda: self.watch_pot())
-        print("Now how about a little infared")
+        #print("Now how about a little infared")
         #self.remote = IrRemote(pin=DreamMachine.IR_PIN, when_pressed=self.when_ir_pressed)
-        print("Chromecast be patient")
         self.chrome_cast = EZChromeCast("HomeCast")
         print("GPIO Time")
         self.light_button = Button(self.LIGHT_BUTTON_PIN, pull_up=False)
@@ -45,8 +45,10 @@ class DreamMachine:
         print("Alright dream cowboy, I'm ready for your button pressing")
 
     def take_me_to_the_zen_garden(self):
-        print("the door is very old")
-        self.chrome_cast.play("http://172.16.0.20/static/mp3/zengarden.mp3")
+        mp3s = list(map(lambda mp3: "http://172.16.0.20/static/mp3/" + mp3 + ".mp3", ["zengarden", "pzizz", "forest"]))
+        random_mp3 = random.choice(mp3s)
+        print("the door is very old", random_mp3)
+        self.chrome_cast.play(random_mp3)
 
     def when_ir_pressed(self, command):
         print("ir heard", command)

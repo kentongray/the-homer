@@ -1,7 +1,7 @@
 import os
 import random
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask import redirect
 from flask import send_from_directory
 from flask import url_for
@@ -14,6 +14,9 @@ print(static_folder, os.getcwd(), os.path.dirname(os.path.realpath(__file__)))
 app = Flask("dreammachine", static_folder=static_folder)
 dream_machine = None
 
+@app.route("/state")
+def state():
+    return jsonify(playing=dream_machine.chrome_cast.playing, hue_on=dream_machine.hue.on)
 
 def on_off(val):
     if not val:
@@ -150,6 +153,7 @@ def index():
             options))
     random_text = ["All🔘Your🔘Button🔘Pressing🔘Needs",
                    "THE HOMER ❤️'s YOU",
+                   "i still think of myself as the homer",
                    "doh!",
                    "hello world!",
                    "💖",
@@ -162,7 +166,7 @@ def index():
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name=apple-mobile-web-app-capable content=yes>
     <meta name=apple-mobile-web-app-status-bar-style content=white>
-    <title>the homer</title>
+    <title>dream machine</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.2/fetch.min.js"></script>
     <script>
@@ -172,7 +176,6 @@ def index():
             }).then(r => document.location.reload(true));
         }
     </script>
-    <h1 style=\"text-transform:lowercase\">the homer</h2>
     %s
     <div class="random">%s</div>
     <div>

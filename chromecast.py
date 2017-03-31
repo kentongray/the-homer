@@ -15,7 +15,7 @@ class EZChromeCast():
 
     @property
     def playing(self):
-        return self.ready and not self.cast.is_idle
+        return self.ready and self.cast.media_controller.status.player_state == 'PLAYING'
 
     def create_chrome_cast(self, name):
         self.cast = pychromecast.get_chromecast(friendly_name=name)
